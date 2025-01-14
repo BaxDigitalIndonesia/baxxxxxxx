@@ -12,7 +12,7 @@ const appMiddleware = express();
 // Middleware configuration
 appMiddleware.use(
     cors({
-        origin: "https://client-bax-digital-indonesia.vercel.app",
+        origin: "https://baxxxxxxx.vercel.app",
         credentials: true,
         methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     }),
