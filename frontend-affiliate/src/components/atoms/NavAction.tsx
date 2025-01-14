@@ -37,7 +37,7 @@ export function NavActionComponent() {
   .split("; ")
   .find((row) => row.startsWith("accessToken"))
   ?.split("=")[1];
-console.log("token-nav",token);
+  console.log("token-nav",token);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
     if (pathName === url) {
