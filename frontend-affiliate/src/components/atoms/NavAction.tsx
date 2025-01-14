@@ -24,6 +24,7 @@ import Cookies from "js-cookie";
 import { jwtDecode } from "jwt-decode";
 import { useLoadingContext } from "@/hooks/LoadingContext";
 import LoadingAnimate from "./LoadingAnimate";
+import AccesToken from "@/middlewares/cookies";
 
 export function NavActionComponent() {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,11 +34,8 @@ export function NavActionComponent() {
   const [userData, setUserData] = useState<any>(null);
   const pathName = usePathname();
   const { setIsLoading } = useLoadingContext();
-  const token = document.cookie
-  .split("; ")
-  .find((row) => row.startsWith("accessToken"))
-  ?.split("=")[1];
-console.log("token-nav",token);
+  const token = AccesToken.toString();
+  console.log(token);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
     if (pathName === url) {

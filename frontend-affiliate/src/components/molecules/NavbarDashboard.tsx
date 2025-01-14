@@ -11,14 +11,12 @@ import {
 } from "../ui/breadcrumb";
 import { NavActions } from "../atoms/NavAction";
 import Cookies from "js-cookie";
+import AccesToken from "@/middlewares/cookies";
 
 export default function NavbarDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const accessToken = document.cookie
-  .split("; ")
-  .find((row) => row.startsWith("accessToken"))
-  ?.split("=")[1];
-console.log("token-accessToken",accessToken);
+  const accessToken = AccesToken;
+console.log(accessToken);
 
   useEffect(() => {
     //const accessToken = Cookies.get("accessToken");
