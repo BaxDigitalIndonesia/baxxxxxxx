@@ -1,0 +1,172 @@
+@tailwind base;
+@tailwind components; 
+@tailwind utilities;
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    /* --foreground: 0 0% 90%;
+    --background: 0 0% 90%; */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 240 5.9% 10%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --chart-1: 214 93.8% 43.9%;
+    --chart-2: 209 63.4% 27.8%;
+    --chart-3: 209 100% 18%;
+    --chart-4: 223 100% 53%;
+    --chart-5: 223 100% 64%;
+    --radius: 0.5rem;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+  .dark {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    /* --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%; */
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 3.7% 15.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 240 3.7% 15.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply scroll-smooth border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground min-h-screen;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 5px;
+    background-color: hsl(var(--background));
+    border-radius: 8px;
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    color: #0762d9;
+    background-color: #0762d9;
+    border-radius: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: hsl(var(--background));
+  }
+
+  /* Remove scrollbar */
+  .remove-scrollbar::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
+    border-radius: 0px;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 0px;
+  }
+
+  .remove-scrollbar::-webkit-scrollbar-thumb:hover {
+    /* background: #1e2238; */
+    background: transparent;
+  }
+}
+
+@layer utilities {
+  /* ===== TYPOGRAPHY */
+  .h1 {
+    @apply text-[34px] leading-[42px] font-bold;
+  }
+  .h2 {
+    @apply text-[24px] leading-[36px] font-bold;
+  }
+  .h3 {
+    @apply text-[20px] leading-[28px] font-semibold;
+  }
+  .h4 {
+    @apply text-[18px] leading-[20px] font-medium;
+  }
+  .h5 {
+    @apply text-[16px] leading-[24px] font-semibold;
+  }
+  .subtitle-1 {
+    @apply text-[16px] leading-[24px] font-medium;
+  }
+  .subtitle-2 {
+    @apply text-[14px] leading-[20px] font-semibold;
+  }
+  .body-1 {
+    @apply text-[16px] leading-[24px] font-normal;
+  }
+  .body-2 {
+    @apply text-[14px] leading-[20px] font-normal;
+  }
+  .button {
+    @apply text-[14px] leading-[20px] font-medium;
+  }
+  .caption {
+    @apply text-[12px] leading-[16px] font-normal;
+  }
+  .overline {
+    @apply text-[10px] leading-[14px] font-normal;
+  }
+}

@@ -1,0 +1,360 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   String               @id @default(uuid())
+  name                 String
+  email                String               @unique
+  phone                String?
+  password             String?
+  referralCode         String?              @unique
+  referrerId           String?
+  role                 Role
+  googleId             String?              @unique
+  profile              Profile?
+  verified             Boolean              @default(false)
+  passwordResetToken   String?
+  passwordResetExpires DateTime?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+  service              Service[]
+  category             Category[]
+  transaction          Transaction[]
+  customer             Customer[]
+  report               Report[]
+  Mentor               Mentor[]             @relation("mentorUser")
+  adminMentor          Mentor[]             @relation("adminMentorId")
+  student              Student[]
+  mitra                Affiliate[]          @relation("mitraRelation")
+  affiliate            Affiliate[]          @relation("affiliateRelation")
+  Courses              Courses[]
+  userOtp              UserOtpVerification?
+  Reviews              Reviews?
+  Cart                 Cart[]
+}
+
+model Affiliate {
+  id          String   @id @default(uuid())
+  affiliateId String
+  mitraId     String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  mitra     User @relation("mitraRelation", fields: [mitraId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  affiliate User @relation("affiliateRelation", fields: [affiliateId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@unique([affiliateId, mitraId])
+}
+
+model UserOtpVerification {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  otp       String
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  // Relation
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Profile {
+  id       Int       @id @default(autoincrement())
+  photo    String?
+  address  Address?
+  birthday DateTime? @db.Date
+  age      String?
+  job      String?
+  gender   Gender
+  userId   String    @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Address {
+  id         Int      @id @default(autoincrement())
+  country    String?
+  region     String?
+  city       String?
+  district   String?
+  village    String?
+  street     String?
+  postalcode String?
+  profileId  Int      @unique
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  profile Profile @relation(fields: [profileId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+// data of potential customers who visited the url through the affiliate url
+model Customer {
+  id         String   @id @default(uuid())
+  referrerId String
+  visitorIp  String?
+  latitude   String?
+  longitude  String?
+  country    String?
+  region     String?
+  city       String?
+  os         String?
+  device     String?
+  createdAt  DateTime @default(now())
+  referrer   User     @relation(fields: [referrerId], references: [referralCode], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Service {
+  id          String        @id @default(uuid())
+  categoryId  Int
+  name        String
+  qty         Int           @default(1)
+  price       Float
+  userId      String
+  transaction Transaction[]
+  Category    Category      @relation(fields: [categoryId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  User        User          @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Cart        Cart[]
+}
+
+model Cart {
+  id         String   @id @default(uuid())
+  userId     String
+  serviceId  String
+  quantity   Int
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  service    Service  @relation(fields: [serviceId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user       User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  userId   String
+  User     User      @relation(fields: [userId], references: [id])
+  services Service[]
+}
+
+model Transaction {
+  id            String   @id @default(uuid())
+  userId        String
+  qty           Int      @default(1)
+  totalPrice    String
+  paymentMethod String
+  status        Status
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Service   Service? @relation(fields: [serviceId], references: [id])
+  serviceId String?
+}
+
+model Report {
+  id                   String   @id @default(uuid())
+  userId               String
+  totalSales           Float
+  topProduct           String
+  affiliatePerformance Json
+  commission           Float
+  createdAt            DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+// Bootcamp specific data
+model Mentor {
+  id           String    @id @default(uuid())
+  student      Student[]
+  courses      Courses[]
+  exams        Exam[]
+  adminId      String
+  userIdMentor String
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  admin      User @relation("adminMentorId", fields: [adminId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  mentorUser User @relation("mentorUser", fields: [userIdMentor], references: [id], onUpdate: Cascade, onDelete: Cascade)
+
+  @@unique([adminId, userIdMentor])
+}
+
+model Student {
+  id            String       @id @default(uuid())
+  mentorId      String
+  userIdStudent String       @unique
+  courseId      String
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  Attendance    Attendance[]
+  Result        Result[]
+
+  courses Courses @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  mentor  Mentor  @relation(fields: [mentorId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  user    User    @relation(fields: [userIdStudent], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Courses {
+  id           String         @id @default(uuid())
+  name         String
+  desc         String
+  capacity     Int
+  phase        Phase[]
+  student      Student[]
+  userId       String
+  user         User           @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Mentor       Mentor?        @relation(fields: [mentorId], references: [id])
+  mentorId     String?
+  Reviews      Reviews?
+  Announcement Announcement[]
+  Event        Event[]
+}
+
+// Stage Bootcamp
+model Phase {
+  id       String     @id @default(uuid())
+  name     String // fundamental, intermediate, advanced, etc.
+  desc     String?
+  phase    Int
+  courseId String
+  chapter  Chapters[]
+
+  course Courses @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Chapters {
+  id      String   @id @default(uuid())
+  name    String
+  desc    String?
+  chapter Int
+  phaseId String
+  lesson  Lesson[]
+
+  phase Phase @relation(fields: [phaseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Lesson {
+  id         String       @id @default(uuid())
+  chapterId  String
+  name       String
+  desc       String?
+  image      String?
+  video      String?
+  day        Day
+  StartTime  DateTime
+  EndTime    DateTime
+  exam       Exam[]
+  attendance Attendance[]
+
+  chapter Chapters @relation(fields: [chapterId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Reviews {
+  id        String  @id @default(uuid())
+  rating    Int     @default(5)
+  comment   String?
+  userId    String  @unique
+  courserId String  @unique
+
+  user    User    @relation(fields: [userId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  courser Courses @relation(fields: [courserId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Exam {
+  id        String   @id @default(uuid())
+  title     String
+  desc      String
+  type      String
+  StartTime DateTime
+  EndTime   DateTime
+  lessonId  String
+  result    Result[]
+
+  lesson   Lesson  @relation(fields: [lessonId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  Mentor   Mentor? @relation(fields: [mentorId], references: [id])
+  mentorId String?
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  checkIn   DateTime
+  checkOut  DateTime
+  present   Boolean
+  studentId String
+  lessonId  String
+  result    Result[]
+
+  student  Student @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  lesson   Lesson  @relation(fields: [lessonId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  resultId String
+}
+
+model Result {
+  id         String @id @default(uuid())
+  score      Int    @default(0) // average score
+  examId     String
+  studentId  String
+  attendeeId String
+
+  exam     Exam       @relation(fields: [examId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  student  Student    @relation(fields: [studentId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+  attendee Attendance @relation(fields: [attendeeId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Announcement {
+  id       String   @id @default(uuid())
+  title    String
+  desc     String
+  date     DateTime
+  courseId String
+
+  course Courses @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+model Event {
+  id        String   @id @default(uuid())
+  title     String
+  desc      String
+  image     String?
+  startDate DateTime
+  endDate   DateTime
+  courseId  String
+
+  course Courses @relation(fields: [courseId], references: [id], onUpdate: Cascade, onDelete: Cascade)
+}
+
+enum Role {
+  ADMIN
+  MITRA
+  AFFILIATE
+  CUSTOMER
+  STUDENTS
+  MENTOR
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum Day {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+}
+
+enum Status {
+  PENDING
+  SUCCESS
+  FAILED
+}
