@@ -33,6 +33,11 @@ export function NavActionComponent() {
   const [userData, setUserData] = useState<any>(null);
   const pathName = usePathname();
   const { setIsLoading } = useLoadingContext();
+  const token = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("accessToken"))
+  ?.split("=")[1];
+console.log("token-nav",token);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
     if (pathName === url) {
@@ -47,7 +52,7 @@ export function NavActionComponent() {
   }, [pathName]);
 
   useEffect(() => {
-    const token = Cookies.get("accessToken");
+    //const token = Cookies.get("accessToken");
     if (token) {
       try {
         const decoded: any = jwtDecode(token);

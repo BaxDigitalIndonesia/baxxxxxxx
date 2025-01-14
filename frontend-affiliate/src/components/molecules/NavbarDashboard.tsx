@@ -14,9 +14,14 @@ import Cookies from "js-cookie";
 
 export default function NavbarDashboard() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const accessToken = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("accessToken"))
+  ?.split("=")[1];
+console.log("token-accessToken",accessToken);
 
   useEffect(() => {
-    const accessToken = Cookies.get("accessToken");
+    //const accessToken = Cookies.get("accessToken");
     setIsAuthenticated(!!accessToken); // Set true jika accessToken ada
   }, []);
 

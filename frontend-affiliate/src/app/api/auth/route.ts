@@ -1,5 +1,5 @@
 import { Register, Verify } from "@/interface";
-const api = process.env.NEXT_PUBLIC_API_BE!;
+const api = process.env.NEXT_PUBLIC_API_BE;
 
 export async function POST_LOGIN(email: string, password: string) {
   const response = await fetch(`${api}/auth/login`, {
