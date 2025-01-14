@@ -35,7 +35,7 @@ export function NavActionComponent() {
   const pathName = usePathname();
   const { setIsLoading } = useLoadingContext();
   const token = AccesToken.toString();
-  console.log(token);
+  console.log("token",token);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>, url: string) => {
     if (pathName === url) {
