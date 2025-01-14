@@ -18,7 +18,7 @@ export default function NavbarDashboard() {
   .split("; ")
   .find((row) => row.startsWith("accessToken"))
   ?.split("=")[1];
-console.log("token-accessTokens",accessToken);
+  console.log("token-accessTokens",accessToken);
 
   useEffect(() => {
     //const accessToken = Cookies.get("accessToken");
